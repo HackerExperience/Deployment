@@ -36,18 +36,18 @@ full_path(){
 }
 
 install_config(){
-    if [ ! -e ${3}/$1 ]; then
-        exit_msg "Config file/folder $1 not found at ${3}."
+    if [ ! -e ${2}/$1 ]; then
+        exit_msg "Config file/folder $1 not found at ${2}."
     fi
 
     # Avoid dev mistakes by ensuring full path
-    full_path $2 
+    full_path $3 
 
-    if [ ! -d $2 ]; then
-        exit_msg "Destination dir $2 not found."
+    if [ ! -d $3 ]; then
+        exit_msg "Destination dir $3 not found."
     fi
 
-    cp -r ${3}/$1 ${2}/$1 || exit_msg "Failed to execute command: cp -r ${3}/$1 ${2}/$1"
+    cp -r ${2}/$1 ${3}/$1 || exit_msg "Failed to execute command: cp -r ${2}/$1 ${3}/$1"
 }
 
 read_common_input(){
