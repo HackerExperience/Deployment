@@ -6,6 +6,7 @@ source $(dirname $0)/../../common.sh
 read_mariadb_input(){
 
     MYSQL_SRC_DIR='.'
+    MYSQL_ENV='MYSQL_RANDOM_ROOT_PASSWORD'
     MYSQL_CONTAINER_NAME='mysql'
     MYSQL_DATA_DIR='/mysql-data'
     MYSQL_CONF_DIR='/mysql-conf'
@@ -16,6 +17,7 @@ read_mariadb_input(){
         case "$1" in
             # MySQL
             --mysql-src) full_path $2 && MYSQL_SRC_DIR=$2 ;;
+            --mysql-env) MYSQL_ENV=$2 ;;
             --mysql-name) MYSQL_CONTAINER_NAME=$2 ;;
             --mysql-image) MYSQL_CONTAINER_IMAGE=$2 ;;
             --mysql-data) full_path $2 && MYSQL_DATA_DIR=$2 ;;
@@ -59,6 +61,7 @@ deploy_mariadb(){
     docker run -d \
         --name $MYSQL_CONTAINER_NAME \
         --volumes-from ${MYSQL_CONTAINER_NAME}_data \
+        -e ${MYSQL_ENV} \
         -p ${MYSQL_PORT}:3306 \
         $MYSQL_CONTAINER_IMAGE
 
