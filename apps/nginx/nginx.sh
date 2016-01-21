@@ -14,7 +14,7 @@ read_nginx_input(){
 
     while test $# -gt 0; do
         case "$1" in
-            --nginx-src) full_path $2 && NGINX_SRC_DIR ;;
+            --nginx-src) full_path $2 && NGINX_SRC_DIR=$2 ;;
             --nginx-name) NGINX_CONTAINER_NAME=$2 ;;
             --nginx-image) NGINX_CONTAINER_IMAGE=$2 ;;
             --nginx-port) NGINX_PORT=$2 ;;
