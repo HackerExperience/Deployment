@@ -3,7 +3,7 @@
 MODULES_PATH=/root/nginx
 NGINX=1.9.9
 
-mkdir $MODULES_PATH && cd $MODULES_PATH
+mkdir -p $MODULES_PATH && cd $MODULES_PATH
 
 wget -qO- http://nginx.org/download/nginx-${NGINX}.tar.gz | tar xvz
 
@@ -11,7 +11,7 @@ cd nginx-${NGINX}
 
 # Change the config as needed.
 
-.configure \
+./configure \
                                                                                 \
     `# Paths`                                                                   \
     --prefix=/etc/nginx                                                         \
