@@ -60,7 +60,7 @@ deploy_nginx(){
 
     sleep 2
 
-    verify_running NGINX_CONTAINER_NAME
+    verify_running $NGINX_CONTAINER_NAME
 
 }
 

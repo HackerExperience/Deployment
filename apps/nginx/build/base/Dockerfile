@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     zlib-dev \
     openssl-dev \
     linux-headers \
-    alpine-sdk
+    alpine-sdk \
+    pcre curl # Both required at runtime
 
 ADD install_nginx.sh ./install_nginx.sh
 
