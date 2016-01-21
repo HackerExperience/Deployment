@@ -21,7 +21,7 @@ RUN apk add --no-cache perl
 
 # Copy files to container
 ADD install_acceptlanguage.sh ./install_acceptlanguage.sh
-ADD install_httpconcat.sh ./install_ngxpagespeed.sh
+ADD install_httpconcat.sh ./install_httpconcat.sh
 ADD install_modsec.sh ./install_modsec.sh
 ADD install_nginx.sh ./install_nginx.sh 
 ADD install_minification.sh ./install_minification.sh
