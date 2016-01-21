@@ -5,6 +5,7 @@ source $(dirname $0)/../../common.sh
 
 read_nginx_input(){
 
+    NGINX_SRC_DIR='.'
     NGINX_CONTAINER_NAME='nginx'
     NGINX_CONTAINER_IMAGE='he_nginx_extras'
     NGINX_PORT='80'
@@ -13,6 +14,7 @@ read_nginx_input(){
 
     while test $# -gt 0; do
         case "$1" in
+            --nginx-src) full_path $2 && NGINX_SRC_DIR ;;
             --nginx-name) NGINX_CONTAINER_NAME=$2 ;;
             --nginx-image) NGINX_CONTAINER_IMAGE=$2 ;;
             --nginx-port) NGINX_PORT=$2 ;;
@@ -40,8 +42,8 @@ deploy_nginx(){
     mkdir -p $NGINX_CONF_DIR
     mkdir -p $NGINX_DATA_DIR
 
-    install_config nginx.conf $NGINX_CONF_DIR
-    install_config sites-enabled $NGINX_CONF_DIR
+    install_config nginx.conf $NGINX_SRC_DIR $NGINX_CONF_DIR
+    install_config sites-enabled $NGINX_SRC_DIR $NGINX_CONF_DIR
 
     docker run -d \
         --name ${NGINX_CONTAINER_NAME}_data \

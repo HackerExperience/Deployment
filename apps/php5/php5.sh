@@ -5,6 +5,7 @@ source $(dirname $0)/../../common.sh
 
 read_php5_input(){
 
+    PHP_SRC_DIR='.'
     PHP_CONTAINER_NAME='php5'
     PHP_CONTAINER_IMAGE='he_php5'
     PHP_PORT='9000'
@@ -12,6 +13,7 @@ read_php5_input(){
 
     while test $# -gt 0; do
         case "$1" in
+            --php-src) full_path $2 && PHP_SRC_DIR ;;
             --php-name) PHP_CONTAINER_NAME=$2 ;;
             --php-image) PHP_CONTAINER_IMAGE=$2 ;;
             --php-conf) full_path $2 && PHP_CONF_DIR=$2 ;;
@@ -37,9 +39,9 @@ deploy_php5(){
 
     mkdir -p $PHP_CONF_DIR
 
-    install_config php.ini $PHP_CONF_DIR
-    install_config php-fpm.ini $PHP_CONF_DIR
-    install_config conf.d $PHP_CONF_DIR
+    install_config php.ini $PHP_SRC_DIR $PHP_CONF_DIR
+    install_config php-fpm.ini $PHP_SRC_DIR $PHP_CONF_DIR
+    install_config conf.d $PHP_SRC_DIR $PHP_CONF_DIR
 
     docker run -d \
         --name $PHP_CONTAINER_NAME \
