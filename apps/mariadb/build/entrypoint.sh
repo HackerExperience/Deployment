@@ -1,5 +1,6 @@
 #!/bin/bash
 # Inspired on https://github.com/docker-library/mysql
+
 set -e
 
 
@@ -29,6 +30,11 @@ done
 if [ "$i" = 0 ]; then
     echo >&2 'MySQL init process failed.'
     exit 1
+fi
+
+if [ ! -z "$MYSQL_RANDOM_ROOT_PASSWORD" ]; then
+    MYSQL_ROOT_PASSWORD="$(pwgen -1 32)"
+    echo "GENERATED ROOT PASSWORD: $MYSQL_ROOT_PASSWORD"
 fi
 
 # Change root pwd; remove test database; remove anon users
@@ -69,4 +75,4 @@ echo
 echo 'MySQL init process done. Ready for start up.'
 echo
 
-exec "$@"
+/bin/sh -c "$@"

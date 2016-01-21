@@ -19,4 +19,11 @@ RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 # Start
-CMD ["/bin/sh" "-c" "mysqld", "--user=mysql"]
+CMD ["mysqld_safe", "--user=mysql"]
+
+# TODO: fix this, entrypoint.sh makes dumb-init useless
+# PID   USER     TIME   COMMAND
+#    1 root       0:00 {entrypoint.sh} /bin/bash /entrypoint.sh mysqld --user=mysql
+#  164 root       0:00 dumb-init /bin/sh -c mysqld --user=mysql
+#  165 root       0:00 /bin/sh -c mysqld --user=mysql
+#  166 mysql      0:02 mysqld

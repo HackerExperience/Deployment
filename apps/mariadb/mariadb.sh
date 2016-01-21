@@ -6,7 +6,7 @@ source $(dirname $0)/../../common.sh
 read_mariadb_input(){
 
     MYSQL_SRC_DIR='.'
-    MYSQL_ENV='MYSQL_RANDOM_ROOT_PASSWORD'
+    MYSQL_ENV='MYSQL_RANDOM_ROOT_PASSWORD=1'
     MYSQL_CONTAINER_NAME='mysql'
     MYSQL_DATA_DIR='/mysql-data'
     MYSQL_CONF_DIR='/mysql-conf'
