@@ -48,7 +48,8 @@ deploy_nginx(){
     docker run -d \
         --name ${NGINX_CONTAINER_NAME}_data \
         -v ${NGINX_CONF_DIR}/nginx.conf:/etc/nginx/nginx.conf:ro \
-        -v ${NGINX_CONF_DIR}/sites-enabled:/etc/nginx/sites-enabled:ro \
+        -v ${NGINX_CONF_DIR}/nginx.d:/etc/nginx/nginx.d:ro \
+        -v ${NGINX_CONF_DIR}/sites-enabled/:/etc/nginx/sites-enabled:ro \
         -v ${NGINX_DATA_DIR}:/var/www:rw \
         busybox /bin/true
 
