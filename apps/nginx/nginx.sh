@@ -11,6 +11,7 @@ read_nginx_input(){
     NGINX_PORT='80'
     NGINX_CONF_DIR='/nginx-conf'
     NGINX_DATA_DIR='/nginx-data'
+    NGINX_USE_PHP=0
 
     while test $# -gt 0; do
         case "$1" in
@@ -20,6 +21,7 @@ read_nginx_input(){
             --nginx-port) NGINX_PORT=$2 ;;
             --nginx-conf) full_path $2 && NGINX_CONF_DIR=$2 ;;
             --nginx-data) full_path $2 && NGINX_DATA_DIR=$2 ;;
+            --php-socket) PHP_SOCKET_NAME=$2 && NGINX_USE_PHP=1 ;;
             --skip-nginx) SKIP_NGINX=1 ;;
         esac
         shift
@@ -55,9 +57,16 @@ deploy_nginx(){
         -v ${LOGS_DIR}/${NGINX_CONTAINER_NAME}:/var/log/nginx/:rw \
         busybox /bin/true
 
+    extra_volumes=''
+
+    if [ $NGINX_USE_PHP ]; then
+        extra_volumes+="--volumes-from ${PHP_SOCKET_NAME}_socket"
+    fi
+
     docker run -d \
         --name $NGINX_CONTAINER_NAME \
         --volumes-from ${NGINX_CONTAINER_NAME}_data \
+        ${extra_volumes} \
         -p ${NGINX_PORT}:80 \
         $NGINX_CONTAINER_IMAGE
 
