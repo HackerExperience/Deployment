@@ -26,8 +26,6 @@ RUN apk del --purge alpine-sdk pcre-dev zlib-dev openssl-dev linux-headers
 # Clean-up
 RUN rm -rf /build && rm -rf /root/nginx/*
 
-USER www-data
-
 VOLUME /var/log /etc/nginx
 
 EXPOSE 80 443
