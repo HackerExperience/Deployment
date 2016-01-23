@@ -61,7 +61,7 @@ cd nginx-${NGINX}
     --with-file-aio                                                             \
                                                                                 \
     `# We use perl for minification...`                                         \
-    --with-perl_module                                                          \
+    --with-http_perl_module                                                     \
                                                                                 \
     `# Disabling stuff I don't think we'll use`                                 \
     --without-http_charset_module                                               \
