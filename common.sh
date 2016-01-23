@@ -7,11 +7,11 @@ exit_msg(){
 }
 
 container_exists(){
-    docker ps -a | grep -iq $1
+    docker ps -a --format "{{.Names}}" | grep -iq $1
 }
 
 container_running(){
-    docker ps | grep -iq $1
+    docker ps --format "{{.Names}}" | grep -iq $1
 }
 
 verify_conflict(){
