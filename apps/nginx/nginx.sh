@@ -44,6 +44,7 @@ deploy_nginx(){
 
     install_config nginx.conf $NGINX_SRC_DIR $NGINX_CONF_DIR
     install_config sites-enabled $NGINX_SRC_DIR $NGINX_CONF_DIR
+    install_config nginx.d $NGINX_SRC_DIR $NGINX_CONF_DIR
 
     docker run -d \
         --name ${NGINX_CONTAINER_NAME}_data \
