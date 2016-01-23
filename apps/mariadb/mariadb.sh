@@ -56,7 +56,7 @@ deploy_mariadb(){
         -v ${LOGS_DIR}/${MYSQL_CONTAINER_NAME}:/var/log/mysql/:rw \
         busybox /bin/true
 
-    sleep 0.5 
+    sleep 0.2
 
     docker run -d \
         --name $MYSQL_CONTAINER_NAME \
