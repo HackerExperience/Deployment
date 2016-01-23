@@ -8,7 +8,8 @@ RUN apk add --no-cache \
     zlib-dev \
     openssl-dev \
     linux-headers \
-    alpine-sdk
+    alpine-sdk \
+    perl-dev
 
 # Required by mod_security
 RUN apk add --no-cache \
@@ -35,7 +36,7 @@ RUN ./install_nginx.sh
 RUN ./install_minification.sh
 
 # Remove compile-time dependencies
-RUN apk del --purge alpine-sdk pcre-dev zlib-dev openssl-dev linux-headers apache2-dev curl-dev
+RUN apk del --purge alpine-sdk pcre-dev zlib-dev openssl-dev linux-headers apache2-dev curl-dev perl-dev
 
 # Clean-up
 RUN rm -rf /build && rm -rf /root/nginx/*
