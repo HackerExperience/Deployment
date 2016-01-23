@@ -52,6 +52,7 @@ deploy_nginx(){
         -v ${NGINX_CONF_DIR}/nginx.d:/etc/nginx/nginx.d:ro \
         -v ${NGINX_CONF_DIR}/sites-enabled/:/etc/nginx/sites-enabled:ro \
         -v ${NGINX_DATA_DIR}:/var/www:rw \
+        -v ${LOGS_DIR}/${NGINX_CONTAINER_NAME}:/var/log/nginx/:rw \
         busybox /bin/true
 
     docker run -d \

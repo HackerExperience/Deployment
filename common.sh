@@ -41,13 +41,14 @@ install_config(){
     fi
 
     # Avoid dev mistakes by ensuring full path
+    full_path $2
     full_path $3 
 
     if [ ! -d $3 ]; then
         exit_msg "Destination dir $3 not found."
     fi
 
-    cp -r ${2}/$1 ${3}/$1 || exit_msg "Failed to execute command: cp -r ${2}/$1 ${3}/$1"
+    cp -r ${2}/$1 ${3} || exit_msg "Failed to execute command: cp -r ${2}/$1 ${3}"
 }
 
 read_common_input(){
