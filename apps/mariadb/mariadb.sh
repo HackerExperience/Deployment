@@ -42,6 +42,7 @@ deploy_mariadb(){
 
     verify_conflict $MYSQL_CONTAINER_NAME
     verify_conflict ${MYSQL_CONTAINER_NAME}_data
+    verify_conflict ${MYSQL_CONTAINER_NAME}_socket
 
     mkdir -p ${LOGS_DIR}/${MYSQL_CONTAINER_NAME}
     mkdir -p $MYSQL_DATA_DIR
@@ -69,6 +70,11 @@ deploy_mariadb(){
     sleep 15
 
     verify_running $MYSQL_CONTAINER_NAME
+
+    docker run -d \
+        --name ${MYSQL_CONTAINER_NAME}_socket \
+        --volumes-from $MYSQL_CONTAINER_NAME \
+        busybox /bin/true
 
 }
 

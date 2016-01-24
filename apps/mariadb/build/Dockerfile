@@ -1,7 +1,7 @@
 FROM he_base
 
 # Install from APK
-RUN apk add --no-cache mariadb mariadb-client bash
+RUN apk add --no-cache mariadb mariadb-client bash pwgen
 
 # Setup mysql dirs and permissions
 RUN mkdir -p /run/mysqld
@@ -17,6 +17,8 @@ EXPOSE 3306
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
+
+VOLUME /run/mysqld
 
 # Start
 CMD ["mysqld_safe", "--user=mysql"]

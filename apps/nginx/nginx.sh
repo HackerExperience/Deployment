@@ -11,7 +11,6 @@ read_nginx_input(){
     NGINX_PORT='80'
     NGINX_CONF_DIR='/nginx-conf'
     NGINX_DATA_DIR='/nginx-data'
-    NGINX_USE_PHP=0
 
     while test $# -gt 0; do
         case "$1" in

@@ -9,7 +9,7 @@ RUN apk add --no-cache \
         php-opcache \
         php-pdo php-pdo_dblib \
         php-mysql php-mysqli \
-        php-gd 
+        php-gd php-json php-openssl
 
 VOLUME /var/run
 

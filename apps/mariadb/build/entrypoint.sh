@@ -3,6 +3,10 @@
 
 set -e
 
+if [ -f /mysql_installed ]; then
+    /bin/sh -c "$@"
+    exit 0
+fi
 
 if [ -z "$MYSQL_ROOT_PASSWORD" -a -z "$MYSQL_ALLOW_EMPTY_PASSWORD" -a -z "$MYSQL_RANDOM_ROOT_PASSWORD" ]; then
     echo >&2 'error: database is uninitialized and password option is not specified '
@@ -70,6 +74,8 @@ if ! kill -s TERM "$pid" || ! wait "$pid"; then
     echo >&2 'MySQL init process failed.'
     exit 1
 fi
+
+touch /mysql_installed
 
 echo
 echo 'MySQL init process done. Ready for start up.'

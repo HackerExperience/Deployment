@@ -17,6 +17,7 @@ read_php5_input(){
             --php-image) PHP_CONTAINER_IMAGE=$2 ;;
             --php-conf) full_path $2 && PHP_CONF_DIR=$2 ;;
             --php-data) full_path $2 && PHP_DATA_DIR=$2 ;;
+            --mysql-socket) PHP_USE_MYSQL=1 && MYSQL_SOCKET_NAME=$2 ;;
             --skip-php) SKIP_PHP=1 ;;
         esac
         shift
@@ -35,6 +36,7 @@ deploy_php5(){
 
     verify_conflict $PHP_CONTAINER_NAME
     verify_conflict ${PHP_CONTAINER_NAME}_data
+    verify_conflict ${PHP_CONTAINER_NAME}_socket
 
     mkdir -p $PHP_CONF_DIR
 
@@ -44,7 +46,6 @@ deploy_php5(){
 
 
     extra_volumes=''
-
     if [ $PHP_DATA_DIR ]; then
         extra_volumes+="-v ${PHP_DATA_DIR}:/var/www:rw "
     fi
@@ -56,9 +57,15 @@ deploy_php5(){
         $extra_volumes \
         busybox /bin/true
 
+    extra_volumes=''
+    if [ $PHP_USE_MYSQL ]; then
+        extra_volumes+="--volumes-from ${MYSQL_SOCKET_NAME}_socket"
+    fi
+
     docker run -d \
         --name $PHP_CONTAINER_NAME \
         --volumes-from ${PHP_CONTAINER_NAME}_data \
+        $extra_volumes \
         $PHP_CONTAINER_IMAGE
 
     sleep 2
