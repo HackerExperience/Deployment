@@ -16,6 +16,7 @@ read_php5_input(){
             --php-name) PHP_CONTAINER_NAME=$2 ;;
             --php-image) PHP_CONTAINER_IMAGE=$2 ;;
             --php-conf) full_path $2 && PHP_CONF_DIR=$2 ;;
+            --php-data) full_path $2 && PHP_DATA_DIR=$2 ;;
             --skip-php) SKIP_PHP=1 ;;
         esac
         shift
@@ -41,10 +42,18 @@ deploy_php5(){
     install_config php-fpm.conf $PHP_SRC_DIR $PHP_CONF_DIR
     install_config conf.d $PHP_SRC_DIR $PHP_CONF_DIR
 
+
+    extra_volumes=''
+
+    if [ $PHP_DATA_DIR ]; then
+        extra_volumes+="-v ${PHP_DATA_DIR}:/var/www:rw "
+    fi
+
     docker run -d \
         --name ${PHP_CONTAINER_NAME}_data \
         -v ${PHP_CONF_DIR}:/etc/php:ro \
         -v ${LOGS_DIR}/${PHP_CONTAINER_NAME}:/var/log/php \
+        $extra_volumes \
         busybox /bin/true
 
     docker run -d \
