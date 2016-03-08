@@ -4,21 +4,24 @@ set -e
 
 source $(dirname $0)/../../common.sh
 source $(dirname $0)/../mariadb/mariadb.sh
-source $(dirname $0)/../nginx/nginx.sh
-source $(dirname $0)/../php5/php5.sh
 
 read_phabricator_input(){
     
     PHABRICATOR_CONTAINER_NAME='phabricator'
-    PHABRICATOR_ROOT='/phabricator'
-    PHABRICATOR_DATA='/phabricator-data'
+    PHABRICATOR_CONFIG_DIR='/phabricator-config'
+    PHABRICATOR_DATA_DIR='/phabricator-data'
+    PHABRICATOR_SSH_PORT='22'
+    APHLICT_SERVER_PORT='22280'
+    APHLICT_CLIENT_PORT='22281'
 
     while test $# -gt 0; do
         case "$1" in
-            --phab-src) full_path $2 && PHP_SRC_DIR=$2 ;;
             --phab-name) PHABRICATOR_CONTAINER_NAME=$2 ;;
-            --phab-root) full_path $2 && PHABRICATOR_ROOT=$2 ;;
-            --phab-data) full_path $2 && PHABRICATOR_DATA=$2 ;;
+            --phab-conf) full_path $2 && PHABRICATOR_CONFIG_DIR=$2 ;;
+            --phab-data) full_path $2 && PHABRICATOR_DATA_DIR=$2 ;;
+            --phab-ssh-port) PHABRICATOR_SSH_PORT=$2 ;;
+            --aphlict-server-port) APHLICT_SERVER_PORT=$2 ;;
+            --aphlict-client-port) APHLICT_CLIENT_PORT=$2 ;;
         esac
         shift
     done
@@ -31,37 +34,30 @@ deploy_phabricator(){
     read_phabricator_input "$@"
 
     verify_conflict ${PHABRICATOR_CONTAINER_NAME}_data
-
-    mkdir -p $PHABRICATOR_ROOT
-    mkdir -p $PHABRICATOR_DATA
-
-    #install_config nginx.conf $NGINX_SRC_DIR $NGINX_CONF_DIR
-    #install_config sites-enabled $NGINX_SRC_DIR $NGINX_CONF_DIR
-    #install_config nginx.d $NGINX_SRC_DIR $NGINX_CONF_DIR
+    
+    mkdir -p $PHABRICATOR_CONFIG_DIR
+    mkdir -p $PHABRICATOR_DATA_DIR
 
     docker run -d \
         --name ${PHABRICATOR_CONTAINER_NAME}_data \
-        -v ${PHABRICATOR_DATA}:/phabricator-data:rw \
-        -v ${PHABRICATOR_ROOT}:/var/www/phabricator:rw \
+        -v ${PHABRICATOR_CONFIG_DIR}:/config:ro \
+        -v ${PHABRICATOR_DATA_DIR}/repositories:/var/repo:rw \
+        -v ${PHABRICATOR_DATA_DIR}/backup:/tmp/backup:rw \
         busybox /bin/true
+
+    docker run -d \
+        --name=${PHABRICATOR_CONTAINER_NAME} \
+        --volumes-from ${PHABRICATOR_CONTAINER_NAME}_data \
+        -p ${PHABRICATOR_SSH_PORT}:22 \
+        -p ${APHLICT_CLIENT_PORT}:22280 \
+        -p ${APHLICT_SERVER_PORT}:22281 \
+        phabricator
+
 }
 
 if [ "$0" = "$BASH_SOURCE" ]; then
-
-    deploy_phabricator "$@"
+    
     deploy_mariadb "$@"
-
-    set -- "--php-data" "${PHABRICATOR_ROOT}" "--mysql-socket" "${MYSQL_CONTAINER_NAME}" "$@"
-    echo 321;
-    echo "$@"
-
-
-    deploy_php5 "$@"
-
-    set -- "--nginx-data" "${PHABRICATOR_ROOT}" "--php-socket" "${PHP_CONTAINER_NAME}" "$@"
-    echo 123;
-    echo "$@"
-
-    deploy_nginx "$@"
+    deploy_phabricator "$@"
 
 fi
