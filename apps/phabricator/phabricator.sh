@@ -51,7 +51,7 @@ if [ "$0" = "$BASH_SOURCE" ]; then
     deploy_phabricator "$@"
     deploy_mariadb "$@"
 
-    set -- "--php-data" "${PHABRICATOR_ROOT}" "--mysql-socket" "${MYSQL_SOCKET_NAME}" "$@"
+    set -- "--php-data" "${PHABRICATOR_ROOT}" "--mysql-socket" "${MYSQL_CONTAINER_NAME}" "$@"
     echo 321;
     echo "$@"
 
@@ -65,7 +65,3 @@ if [ "$0" = "$BASH_SOURCE" ]; then
     deploy_nginx "$@"
 
 fi
-
-
-./phabricator.sh --nginx-src /config/nginx --nginx-image he_nginx_extras --php-src /config/php5 --mysql-env MYSQL_RANDOM_ROOT_PASSWORD=1 \
-        --mysql-src /config/mariadb
