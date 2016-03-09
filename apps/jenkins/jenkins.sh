@@ -12,7 +12,6 @@ read_jenkins_input(){
 
     while test $# -gt 0; do
         case "$1" in
-            --jenkins-src) full_path $2 && JENKINS_SRC_DIR=$2 ;;
             --jenkins-name) JENKINS_CONTAINER_NAME=$2 ;;
             --jenkins-data) full_path $2 && JENKINS_DATA_DIR=$2 ;;
             --jenkins-web-port) JENKINS_WEB_PORT=$2 ;;
@@ -34,7 +33,7 @@ deploy_jenkins(){
     docker run -d \
         --name ${JENKINS_CONTAINER_NAME}_data \
         -v ${JENKINS_DATA_DIR}:/var/jenkins_home:rw \
-        ${extra_volumes}
+        ${extra_volumes} \
         busybox /bin/true
 
     # We need to have a `jenkins` user on the host due to volume permissions.
@@ -51,8 +50,8 @@ deploy_jenkins(){
     docker run -d \
         --name ${JENKINS_CONTAINER_NAME} \
         --volumes-from ${JENKINS_CONTAINER_NAME}_data \
-        ${ports}
-        -u $(id -u jenkins)
+        ${ports} \
+        -u $(id -u jenkins) \
         jenkins
 
 }
