@@ -34,6 +34,7 @@ deploy_jenkins(){
     docker run -d \
         --name ${JENKINS_CONTAINER_NAME}_data \
         -v ${JENKINS_DATA_DIR}:/var/jenkins_home:rw \
+        ${extra_volumes}
         busybox /bin/true
 
     # We need to have a `jenkins` user on the host due to volume permissions.
@@ -42,10 +43,15 @@ deploy_jenkins(){
     jenkins_uid=$(id -u jenkins)
     chown -R jenkins_uid $JENKINS_DATA_DIR
 
+    container_ports=""
+    if [ -n "${JENKINS_WEB_PORT}" ]; then
+        container_ports+="-p ${JENKINS_WEB_PORT}:8080 " 
+    fi
+
     docker run -d \
         --name ${JENKINS_CONTAINER_NAME} \
         --volumes-from ${JENKINS_CONTAINER_NAME}_data \
-        -p ${JENKINS_WEB_PORT}:8080 \
+        ${ports}
         -u $(id -u jenkins)
         jenkins
 
