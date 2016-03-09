@@ -40,7 +40,7 @@ deploy_jenkins(){
     id -u jenkins &>/dev/null || useradd -MNs /dev/null jenkins
 
     jenkins_uid=$(id -u jenkins)
-    chown -R jenkins_uid $JENKINS_DATA_DIR
+    chown -R $jenkins_uid $JENKINS_DATA_DIR
 
     container_ports=""
     if [ -n "${JENKINS_WEB_PORT}" ]; then
@@ -51,7 +51,7 @@ deploy_jenkins(){
         --name ${JENKINS_CONTAINER_NAME} \
         --volumes-from ${JENKINS_CONTAINER_NAME}_data \
         ${ports} \
-        -u $(id -u jenkins) \
+        -u ${jenkins_uid} \
         jenkins
 
 }
