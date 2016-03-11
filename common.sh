@@ -28,6 +28,12 @@ verify_running(){
     fi
 }
 
+verify_exists(){
+    if ! container_exists $1; then
+        exit_msg "Container $1 does not exists."
+    fi
+}
+
 full_path(){
     # /absolute/path/without/trailing/slash/is/ok
     # /this/will/fail/

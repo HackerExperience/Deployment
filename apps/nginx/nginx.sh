@@ -29,6 +29,10 @@ read_nginx_input(){
 
 deploy_nginx(){
 
+    ############################################################################
+    # READ INPUT
+    ############################################################################
+
     read_common_input "$@"
     read_nginx_input "$@"
 
@@ -37,8 +41,16 @@ deploy_nginx(){
         return
     fi
 
+    ############################################################################
+    # CHECK REQUIREMENTS
+    ############################################################################
+
     verify_conflict $NGINX_CONTAINER_NAME
     verify_conflict ${NGINX_CONTAINER_NAME}_data
+
+    ############################################################################
+    # SETUP HOST ENVIRONMENT
+    ############################################################################
 
     mkdir -p $NGINX_CONF_DIR
     mkdir -p $NGINX_DATA_DIR
@@ -46,6 +58,10 @@ deploy_nginx(){
     install_config nginx.conf $NGINX_SRC_DIR $NGINX_CONF_DIR
     install_config sites-enabled $NGINX_SRC_DIR $NGINX_CONF_DIR
     install_config nginx.d $NGINX_SRC_DIR $NGINX_CONF_DIR
+
+    ############################################################################
+    # LAUNCH CONTAINERS
+    ############################################################################
 
     docker run -d \
         --name ${NGINX_CONTAINER_NAME}_data \
@@ -56,10 +72,9 @@ deploy_nginx(){
         -v ${LOGS_DIR}/${NGINX_CONTAINER_NAME}:/var/log/nginx/:rw \
         busybox /bin/true
 
-    extra_volumes=''
-
+    extra_volumes=""
     if [ $NGINX_USE_PHP ]; then
-        extra_volumes+="--volumes-from ${PHP_SOCKET_NAME}_socket"
+        extra_volumes+="--volumes-from ${PHP_SOCKET_NAME}"
     fi
 
     docker run -d \

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULES_PATH=/root/nginx
-NGINX=1.9.9
+NGINX=1.9.12
 
 mkdir -p $MODULES_PATH && cd $MODULES_PATH
 
@@ -63,14 +63,16 @@ cd nginx-${NGINX}
     `# We use perl for minification...`                                         \
     --with-http_perl_module                                                     \
                                                                                 \
+    `# Add support for HTTP referer...`                                         \
+    --without-http_referer_module                                               \
+                                                                                \
     `# Disabling stuff I don't think we'll use`                                 \
     --without-http_charset_module                                               \
     --without-http_ssi_module                                                   \
     --without-http_userid_module                                                \
     --without-http_autoindex_module                                             \
     --without-http_map_module                                                   \
-    --without-http_split_clients_module                                         \
-    --without-http_referer_module                                               \
+    --without-http_split_clients_module                                         \    
     --without-http_memcached_module                                             \
     --without-http_empty_gif_module                                             \
     --without-http_browser_module                                               \
