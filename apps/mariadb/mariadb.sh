@@ -69,6 +69,9 @@ deploy_mariadb(){
         chown -R 1000:101 $MYSQL_SOCKET_DIR
     fi
 
+    # Once again, see issue #2259 on docker github
+    chown -R 1000:101 $MYSQL_DATA_DIR
+
     install_config my.cnf $MYSQL_SRC_DIR $MYSQL_CONF_DIR
 
     ############################################################################
