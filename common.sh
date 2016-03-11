@@ -60,7 +60,7 @@ install_config(){
 read_common_input(){
 
     # General
-    LOGS_DIR='/logs'
+    LOGS_DIR='/var/logs'
 
     while test $# -gt 0
     do
