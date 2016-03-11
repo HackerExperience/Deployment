@@ -108,7 +108,7 @@ deploy_mariadb(){
 
     if [ $MYSQL_WITH_SOCKET ]; then
         docker run -d \
-            --name ${MYSQL_CONTAINER_NAME} \
+            --name ${MYSQL_CONTAINER_NAME}_socket \
             --volumes-from $MYSQL_CONTAINER_NAME \
             busybox /bin/true
     fi
