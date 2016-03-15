@@ -82,7 +82,7 @@ deploy_php5(){
     # Main data container
     docker run -d \
         --name ${PHP_CONTAINER_NAME}_data \
-        -v ${PHP_CONF_DIR}:/etc/php:ro \
+        -v ${PHP_CONF_DIR}:/etc/php:rw \
         -v ${LOGS_DIR}/${PHP_CONTAINER_NAME}:/var/log/php:rw \
         $extra_volumes \
         busybox /bin/true
