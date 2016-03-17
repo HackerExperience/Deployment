@@ -3,6 +3,7 @@ set -e
 
 piwik_rotate(){
 
+    LOG_ARCHIVE_PATH='/log-archive'
     PIWIK_ROTATE_PATH='/piwik-rotate'
     PIWIK_ROTATE_EXTENSION='.piwikrotate'
 
@@ -11,7 +12,9 @@ piwik_rotate(){
         case $1 in
             '--rotate-path') PIWIK_ROTATE_PATH=$2 ;;
             '--rotate-ext' ) PIWIK_ROTATE_EXTENSION=$2 ;;
-            '--rotate'|'-r') do_rotate $2 ;;
+            '--rotate'|'-r') rotate $2 ;;
+            '--archive'|'-a') archive $2 ;;
+            '--archive-path') LOG_ARCHIVE_PATH=$2 ;;
         esac
         shift
     done
@@ -30,6 +33,20 @@ do_rotate(){
     # Do the switch
     mv $1 ${PIWIK_ROTATE_PATH}/${log_name}${PIWIK_ROTATE_EXTENSION} && 
         mv $1.tmp $1
+}
+
+archive(){
+
+    log_name=$(echo "$1" | grep -o '[^/]*$' | sed s/$PIWIK_ROTATE_EXTENSION//)
+    log_path=$(echo "$1" | sed s/$log_name//)
+
+    if [ ! -f ${LOG_ARCHIVE_PATH}/$log_name ]; then
+        mkdir -p $LOG_ARCHIVE_PATH
+        touch $LOG_ARCHIVE_PATH/$log_name
+    fi
+
+    cat $1 >> ${LOG_ARCHIVE_PATH}/$log_name && rm -f $1
+
 }
 
 piwik_rotate "$@"
