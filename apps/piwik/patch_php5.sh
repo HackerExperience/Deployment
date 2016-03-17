@@ -24,7 +24,7 @@ patch_php5(){
 
     sleep 3
 
-    docker exec -d 
+    #docker exec -d 
 
 }
 
