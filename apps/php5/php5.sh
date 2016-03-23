@@ -10,6 +10,7 @@ read_php5_input(){
     PHP_CONTAINER_IMAGE='he_php5'
     PHP_CONF_DIR='/php5-conf'
     PHP_SOCKET_DIR='/php5-socket'
+    PHP_CUSTOM_VOLUMES=""
 
     while test $# -gt 0; do
         case "$1" in
@@ -21,6 +22,7 @@ read_php5_input(){
             --php-port) PHP_PORT=$2 ;;
             --php-with-socket) PHP_WITH_SOCKET=1 ;;
             --php-socket-dir) full_path $2 && PHP_SOCKET_DIR=$2 ;;
+            --php-custom-volume) PHP_CUSTOM_VOLUMES+="$2 " ;;
             --mysql-socket) PHP_USE_MYSQL=1 && MYSQL_SOCKET_NAME=$2 ;;
             --skip-php) SKIP_PHP=1 ;;
         esac
@@ -88,6 +90,12 @@ deploy_php5(){
         busybox /bin/true
 
     extra_volumes=""
+    if [[ $PHP_CUSTOM_VOLUMES  != "" ]]; then
+        declare -a arr=($PHP_CUSTOM_VOLUMES)
+        for volume in "${arr[@]}"; do
+           extra_volumes+=" -v $volume "
+        done    
+    fi
 
     # Socket data container
     if [ $PHP_WITH_SOCKET ]; then

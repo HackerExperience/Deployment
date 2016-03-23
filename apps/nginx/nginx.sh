@@ -11,7 +11,7 @@ read_nginx_input(){
     NGINX_PORT='80'
     NGINX_CONF_DIR='/nginx-conf'
     NGINX_DATA_DIR='/nginx-data'
-    CUSTOM_VOLUMES=""
+    NGINX_CUSTOM_VOLUMES=""
 
     while test $# -gt 0; do
         case "$1" in
@@ -23,7 +23,7 @@ read_nginx_input(){
             --nginx-data) full_path $2 && NGINX_DATA_DIR=$2 ;;
             --no-nginx-data) NO_NGINX_DATA=1 ;;
             --php-socket) PHP_SOCKET_NAME=$2 && NGINX_USE_PHP=1 ;;
-            --nginx-custom-volume) CUSTOM_VOLUMES+="$2 " ;;
+            --nginx-custom-volume) NGINX_CUSTOM_VOLUMES+="$2 " ;;
             --skip-nginx) SKIP_NGINX=1 ;;
         esac
         shift
@@ -82,8 +82,8 @@ deploy_nginx(){
         busybox /bin/true
 
     extra_volumes=""
-    if [[ $CUSTOM_VOLUMES  != "" ]]; then
-        declare -a arr=($CUSTOM_VOLUMES)
+    if [[ $NGINX_CUSTOM_VOLUMES  != "" ]]; then
+        declare -a arr=($NGINX_CUSTOM_VOLUMES)
         for volume in "${arr[@]}"; do
            extra_volumes+=" -v $volume "
         done    
