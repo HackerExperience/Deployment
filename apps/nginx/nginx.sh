@@ -21,7 +21,7 @@ read_nginx_input(){
             --nginx-port) NGINX_PORT=$2 ;;
             --nginx-conf) full_path $2 && NGINX_CONF_DIR=$2 ;;
             --nginx-data) full_path $2 && NGINX_DATA_DIR=$2 ;;
-            --no-nginx-data) NO_NGINX_DATA=1 ;;
+            --skip-nginx-data) SKIP_NGINX_DATA=1 ;;
             --php-socket) PHP_SOCKET_NAME=$2 && NGINX_USE_PHP=1 ;;
             --nginx-custom-volume) NGINX_CUSTOM_VOLUMES+="$2 " ;;
             --skip-nginx) SKIP_NGINX=1 ;;
@@ -68,7 +68,7 @@ deploy_nginx(){
     ############################################################################
 
     nginx_data=""
-    if [ -z $NO_NGINX_DATA ]; then
+    if [ -z $SKIP_NGINX_DATA ]; then
         nginx_data+=" -v ${NGINX_DATA_DIR}:/var/www:rw "
     fi
 
