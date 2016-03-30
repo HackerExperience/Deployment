@@ -12,9 +12,8 @@ read_phabricator_input(){
     PHABRICATOR_CONFIG_DIR='/phabricator-config'
     PHABRICATOR_DATA_DIR='/phabricator-data'
     PHABRICATOR_SSH_PORT='22'
-    PHABRICATOR_CUSTOM_VOLUMES=""
-    APHLICT_SERVER_PORT='22280'
-    APHLICT_CLIENT_PORT='22281'
+    PHABRICATOR_CUSTOM_VOLUMES=""    
+    APHLICT_CLIENT_PORT='22280'
 
     while test $# -gt 0; do
         case "$1" in
@@ -24,8 +23,8 @@ read_phabricator_input(){
             --phab-data) full_path $2 && PHABRICATOR_DATA_DIR=$2 ;;
             --phab-ssh-port) PHABRICATOR_SSH_PORT=$2 ;;
             --phab-custom-volume) PHABRICATOR_CUSTOM_VOLUMES+="$2 " ;;
-            --aphlict-server-port) APHLICT_SERVER_PORT=$2 ;;
             --aphlict-client-port) APHLICT_CLIENT_PORT=$2 ;;
+            --aphlict-server-port) APHLICT_SERVER_PORT=$2 ;;            
             --skip-aphlict) SKIP_APHLICT=1 ;;
         esac
         shift
@@ -88,7 +87,7 @@ deploy_phabricator(){
     aphlict_ports=""
     if [ -z $SKIP_APHLICT ]; then
         aphlict_ports+=" -p ${APHLICT_CLIENT_PORT}:22280 "
-        if [ -n $APHLICT_SERVER_PORT ]; then
+        if [ $APHLICT_SERVER_PORT ]; then
             aphlict_ports+=" -p ${APHLICT_SERVER_PORT}:22281 "
         fi
     fi
