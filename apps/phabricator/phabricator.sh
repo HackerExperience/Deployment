@@ -78,7 +78,7 @@ deploy_phabricator(){
         -v ${PHABRICATOR_CONFIG_DIR}:/config:ro \
         -v ${PHABRICATOR_CONFIG_DIR}/php/php-fpm.conf:/etc/php5/php-fpm.conf \
         -v ${PHABRICATOR_CONFIG_DIR}/php/php.ini:/etc/php5/fpm/php.ini \
-        -v ${PHABRICATOR_CONFIG_DIR}/nginx/server.conf:/etc/nginx/servers/http.conf \
+        -v ${PHABRICATOR_CONFIG_DIR}/nginx/server.conf:/etc/nginx/sites-enabled/phabricator.conf \
         -v ${PHABRICATOR_CONFIG_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf  \
         -v ${PHABRICATOR_CONFIG_DIR}/nginx/php.conf:/etc/nginx/php.conf \
         -v ${PHABRICATOR_DATA_DIR}/repositories:/var/repo:rw \
@@ -88,7 +88,9 @@ deploy_phabricator(){
     aphlict_ports=""
     if [ -z $SKIP_APHLICT ]; then
         aphlict_ports+=" -p ${APHLICT_CLIENT_PORT}:22280 "
-        aphlict_ports+=" -p ${APHLICT_SERVER_PORT}:22281 "
+        if [ -n $APHLICT_SERVER_PORT ]; then
+            aphlict_ports+=" -p ${APHLICT_SERVER_PORT}:22281 "
+        fi
     fi
 
     docker run -d \
