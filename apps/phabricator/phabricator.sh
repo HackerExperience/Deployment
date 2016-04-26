@@ -45,6 +45,7 @@ deploy_phabricator(){
     # CHECK REQUIREMENTS
     ############################################################################
 
+    verify_conflict $PHABRICATOR_CONTAINER_NAME
     verify_conflict ${PHABRICATOR_CONTAINER_NAME}_data
 
     ############################################################################
