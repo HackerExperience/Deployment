@@ -20,11 +20,11 @@ patch_php5(){
 
     verify_running $PHP_CONTAINER_NAME
 
-    docker exec -d $PHP_CONTAINER_NAME /sbin/apk --refresh add --no-cache php-zlib php-dom
+    docker exec -d $PHP_CONTAINER_NAME /sbin/apk --refresh add --no-cache php-zlib php-dom php-phar
 
     sleep 3
 
-    #docker exec -d 
+    docker exec -d $PHP_CONTAINER_NAME /bin/sh -c "curl -sS https://getcomposer.org/installer | php"
 
 }
 

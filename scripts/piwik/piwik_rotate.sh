@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+. $(dirname $0)/../../common.sh
+
 piwik_rotate(){
 
     LOG_ARCHIVE_PATH='/log-archive'
@@ -21,14 +23,14 @@ piwik_rotate(){
 
 }
 
-do_rotate(){
+rotate(){
     mkdir -p $PIWIK_ROTATE_PATH
     
-    # log_name=$(echo "$1" | grep -o '[^/]*$')
+    log_name=$(echo "$1" | grep -o '[^/]*$')
     # log_path=$(echo "$1" | sed s/$log_name//)
 
     # Copy permissions on a temporary file
-    touch $1.tmp && chown --reference=$1 $1.tmp
+    touch $1.tmp && chown --reference=$1 $1.tmp || exit_msg "Error"
 
     # Do the switch
     mv $1 ${PIWIK_ROTATE_PATH}/${log_name}${PIWIK_ROTATE_EXTENSION} && 
